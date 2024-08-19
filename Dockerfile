@@ -1,4 +1,5 @@
-FROM ubuntu:latest
-ADD ./build/native/nativeCompile/echosrvr /usr/sbin/echosrvr
+FROM ubuntu:latest 
+RUN mkdir /app
+COPY build/native/nativeCompile/echosrvr /app/echosrvr
 EXPOSE 8080
-CMD ["/usr/sbin/echosrvr"]
+CMD ["/app/echosrvr"]

@@ -1,0 +1,58 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: echosrvr
+  namespace: app
+  labels:
+    app: echosrvr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echosrvr
+  template:
+    metadata:
+      labels:
+        app: echosrvr
+    spec:
+      containers:
+        - name: echosrvr
+          image: echosrvr:v1.0
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: Never
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: echosrvr
+  namespace: app
+spec:
+  selector:
+    app: echosrvr
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+---
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: echosrvr
+  namespace: app
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: echosrvr.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: echosrvr
+                port:
+                  number: 8080
