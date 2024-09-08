@@ -1,0 +1,12 @@
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      path-mapping:
+        prometheus: metrics
+      base-path: /
+      exposure:
+        include: "prometheus,health,info"
+server:
+  port: 8080

@@ -1,3 +1,10 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: app
+  labels:
+    sidecar.istio.io/inject: "true"
+---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -43,6 +50,7 @@ metadata:
   namespace: app
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
 spec:
   ingressClassName: nginx
   rules:
@@ -56,3 +64,7 @@ spec:
                 name: echosrvr
                 port:
                   number: 8080
+  tls:
+    - hosts:
+        - echosrvr.local
+      secretName: echosrvr-tls
